@@ -116,12 +116,22 @@ impl Search {
 
     fn search(&mut self) -> Vec<Station> {
         let req = format!("http://91.132.145.114/json/stations/search?{}", self.buffer);
-        let stations: Vec<Station> = ureq::get(&req).call().into_json_deserialize().unwrap();
+        let stations: Vec<Station> = CLIENT.get(&req).call().into_json_deserialize().unwrap();
         self.buffer.clear();
         stations
     }
 }
+use once_cell::sync::Lazy;
 use serde::Deserialize;
+static CLIENT: Lazy<ureq::Agent> = Lazy::new(|| {
+    let mut client = ureq::agent();
+    client.set("User-Agent", "");
+    client.set(
+        "User-Agent",
+        "nanowave(https://github.com/sigmaSd/picowave)",
+    );
+    client
+});
 #[derive(Debug, Deserialize)]
 struct Station {
     name: String,

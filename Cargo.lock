@@ -276,6 +276,7 @@ name = "picowave"
 version = "0.1.0"
 dependencies = [
  "crossterm",
+ "once_cell",
  "serde",
  "serde_json",
  "ureq",
