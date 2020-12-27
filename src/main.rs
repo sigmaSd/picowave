@@ -167,6 +167,15 @@ impl Term {
     fn update_size(&mut self, width: usize, height: usize) {
         self.width = width / (Self::CELL_SIZE + Self::MARGIN);
         self.height = height - 1;
+
+        let old_cells = std::mem::take(&mut self.cells);
+        self.cells = vec![vec![]];
+        for cell in old_cells.into_iter().flat_map(|row| row.into_iter()) {
+            let _ = self.push(cell);
+        }
+        if self.cursor.0 >= self.height || self.cursor.1 >= self.width {
+            self.cursor = (0, 0);
+        }
     }
     fn clear(&mut self) {
         self.cells = vec![vec![]];
